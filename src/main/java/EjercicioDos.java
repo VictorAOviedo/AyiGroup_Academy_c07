@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 /**
 *@author: Victor Oviedo
@@ -25,15 +26,36 @@ public class EjercicioDos {
      * tamaño del vector y luego se pide un dato numérico para cada posición.</p>
      */
     static void tamanoDelVector(){
-        System.out.println("Ingrese tamaño del Vector");
-        int tamano = sc.nextInt();
-        vector = new int[tamano];
+        boolean tamanoValido = false;
+
+        // Bucle para pedir el tamaño del vector hasta que el dato sea válido
+        while (!tamanoValido) {
+            try {
+                System.out.println("Ingrese tamaño del Vector:");
+                int tamano = sc.nextInt();
+                vector = new int[tamano];
+                tamanoValido = true;  // Tamaño válido, salir del bucle
+            } catch (InputMismatchException e) {
+                System.out.println("Dato no válido, por favor ingrese un número entero.");
+                sc.next();  // Limpiar el valor incorrecto del scanner
+            }
+        }
+
 
         System.out.println("Cargue datos numericos al Vector");
-        for (int i =0; i < vector.length; i++){
-            System.out.println("Dato para posicion " + i + " : ");
-            int dato = sc.nextInt();
-            vector[i] = dato;
+        for (int i = 0; i < vector.length; i++) {
+            boolean datoValido = false;
+            while (!datoValido) {
+                System.out.println("Dato para posición " + i + " : ");
+                if (sc.hasNextInt()) {  // Verifica si el dato es un número entero
+                    int dato = sc.nextInt();
+                    vector[i] = dato;
+                    datoValido = true;  // El dato es válido, salir del bucle
+                } else {
+                    System.out.println("Dato no válido, por favor ingrese un número entero.");
+                    sc.next();  // Descarta el valor incorrecto
+                }
+            }
         }
     }
 
@@ -53,7 +75,7 @@ public class EjercicioDos {
      * si es encontrado; de lo contrario, se informa que el elemento no fue hallado.</p>
      */
     static void busquedaSecuencial(int datoBuscar){
-        //int [] vect = new int[6];
+
         int posicion = -1;
 
         for(int i = 0; i < vector.length; i++){
@@ -63,10 +85,12 @@ public class EjercicioDos {
             }
         }
 
-        if(vector[posicion] == datoBuscar)
+        if(posicion != -1){
             System.out.println("Elemento encontado mediante Busqueda Secuencial, en la posicion: " + posicion);
-        else
+        }
+        else{
             System.out.println("Elemento no encontrado");
+        }
     }
 
 
@@ -75,8 +99,23 @@ public class EjercicioDos {
         System.out.println("El tamaño del vector es: " + vector.length);
         System.out.println(Arrays.toString(vector));
         System.out.println("****************");
-        System.out.println("Ingrese un valor numerico para buscar");
-        int buscar = sc.nextInt();
-        busquedaSecuencial(buscar);
+
+        //System.out.println("Ingrese un valor numerico para buscar");
+
+        boolean dato = false;
+        while (!dato){
+            System.out.println("Ingrese un valor numerico para buscar");
+            if (sc.hasNextInt()){
+                int buscar = sc.nextInt();
+                busquedaSecuencial(buscar);
+                dato = true;
+            } else{
+                System.out.println("Solo se acepta un valor numerico entero");
+                sc.next();
+            }
+
+        }
+
+
     }
 }
